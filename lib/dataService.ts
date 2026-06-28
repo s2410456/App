@@ -2,7 +2,7 @@
 // Heute: Mock-Daten + AsyncStorage. Später intern auf Supabase umstellen,
 // die UI bleibt unverändert (saubere Trennung Client/Server).
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Automat, Meldung, Produkt } from "./types";
+import { Automat, Meldung, Produkt, Sortiment } from "./types";
 import { mockAutomaten, mockMeldungen, mockProdukte, mockSortiment } from "./mockData";
 
 const KEY_MELDUNGEN = "quicktschick:meldungen";
@@ -63,6 +63,12 @@ export async function getSortiment(automatId: string): Promise<Produkt[]> {
   const ids = mockSortiment.filter((s) => s.automatId === automatId).map((s) => s.produktId);
   return mockProdukte.filter((p) => ids.includes(p.id));
   // Später: Join automaten_produkte -> produkte
+}
+
+// Komplette n:m-Zuordnung (für Filter über alle Automaten auf einmal).
+export async function getSortimentAlle(): Promise<Sortiment[]> {
+  return mockSortiment;
+  // Später: supabase.from("automaten_produkte").select("*")
 }
 
 // ---- Meldungen (Automat ODER Produkt, je nach produktId) ----
